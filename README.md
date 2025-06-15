@@ -51,7 +51,7 @@ The webpage was built by transforming content from two official course sheets (`
 
 ├── Block Cipher Operation Modes.pdf # Content source (PDF)
 
-├── README.md # This file
+└── README.md # This file
 
 
 ## 👨‍🏫 Acknowledgements
