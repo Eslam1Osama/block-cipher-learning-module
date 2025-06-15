@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Cipher Operation Modes - Data Security Learning Module</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #00ACC1; /* main blue */
+            --secondary: #4DD0E1; /* lighter blue */
+            --accent: #80DEEA; /* accent blue */
+            --blue1: #B2EBF2;
+            --blue2: #E0F7FA;
+            --blue3: #F3FBFC;
+            --text-main: #00323d; /* deep blue for contrast */
+            --text-secondary: #006978; /* medium blue for secondary text */
+            --bg-gradient: linear-gradient(135deg, var(--primary) 0%, var(--blue2) 100%);
+            --section-bg: rgba(255,255,255,0.98);
+            --header-bg: rgba(255,255,255,0.85);
+            --footer-bg: linear-gradient(135deg, var(--primary) 0%, var(--blue2) 100%);
+            --nav-bg: rgba(255,255,255,0.95);
+            --nav-btn-bg: linear-gradient(90deg, var(--primary), var(--secondary));
+            --nav-btn-active-bg: linear-gradient(90deg, var(--secondary), var(--accent));
+            --transition: all 0.3s cubic-bezier(.4,2,.6,1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        [data-theme="dark"] {
+            --primary: #00ACC1;
+            --secondary: #4DD0E1;
+            --accent: #80DEEA;
+            --blue1: #00323d;
+            --blue2: #006978;
+            --blue3: #222f3e;
+            --text-main: #E0F7FA;
+            --text-secondary: #B2EBF2;
+            --bg-gradient: linear-gradient(135deg, #00323d 0%, #006978 100%);
+            --section-bg: rgba(0, 50, 61, 0.98);
+            --header-bg: rgba(0, 50, 61, 0.85);
+            --footer-bg: linear-gradient(135deg, #00323d 0%, #006978 100%);
+            --nav-bg: rgba(0, 50, 61, 0.95);
+            --nav-btn-bg: linear-gradient(90deg, #00323d, #4DD0E1);
+            --nav-btn-active-bg: linear-gradient(90deg, #4DD0E1, #00323d);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 30px;
+            padding: 40px 20px;
+            background: var(--header-bg);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            padding-top: 60px;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.2) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8em, 5vw, 2.5em);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: clamp(1em, 2.5vw, 1.2em);
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .navigation {
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: var(--nav-btn-bg);
+            color: var(--text-main);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--nav-btn-active-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .section {
+            background: var(--blue1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: clamp(1.4em, 4vw, 1.8em);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            max-width: 800px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            padding: 0;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-image img {
+            max-width: 100%; /* Ensure image is responsive */
+            height: auto;
+            object-fit: contain;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .cipher-card {
+            background: var(--section-bg);
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+            padding: 24px 20px 20px 20px;
+            margin-bottom: 28px;
+        }
+        [data-theme="dark"] .cipher-card {
+            background: var(--blue3);
+        }
+        
+        .key-term {
+            background: linear-gradient(120deg, var(--secondary) 0%, var(--accent) 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+        
+        .pros-cons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .pros, .cons {
+            flex: 1;
+            min-width: 300px;
+            background: var(--blue2);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        
+        .pros { border-left: 5px solid #27ae60; }
+        .cons { border-left: 5px solid #e74c3c; }
+
+        .pros h4, .cons h4 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pros h4 { color: #27ae60; }
+        .cons h4 { color: #e74c3c; }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pros li, .cons li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .pros li::before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .cons li::before {
+            content: "⚠";
+            color: #e74c3c;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .mode-number {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .question-card {
+            background: var(--section-bg);
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            border-radius: 15px;
+            padding: 24px 20px 20px 20px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .question-card h3 {
+            color: var(--primary);
+            font-size: clamp(1.1em, 2.2vw, 1.25em);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-text {
+            background: var(--blue2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .answer {
+            background: var(--blue3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .answer h4 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 30px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+        }
+        .toggle-switch {
+            width: 56px;
+            height: 28px;
+            background: var(--blue1);
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-left: 10px;
+        }
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: left 0.3s cubic-bezier(.4,2,.6,1), background 0.3s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            color: var(--primary);
+            overflow: hidden;
+        }
+        .toggle-slider .icon-sun,
+        .toggle-slider .icon-moon {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .toggle-slider .icon-sun { color: #FFD700; }
+        .toggle-slider .icon-moon { color: var(--primary); }
+        .toggle-switch:not(.dark) .icon-sun { opacity: 1; }
+        .toggle-switch.dark .icon-moon { opacity: 1; }
+        .toggle-switch.dark { background: var(--primary); }
+        .toggle-switch.dark .toggle-slider {
+            left: 31px;
+            background: var(--blue3);
+        }
+        .download-section-btn {
+            background: var(--blue2);
+            color: var(--text-main);
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .download-section-btn:hover {
+            background: var(--blue3);
+            transform: scale(1.08);
+        }
+        .download-section-btn.screenshot-hide, .download-btn.screenshot-hide {
+            display: none !important;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--blue1);
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            background: var(--footer-bg);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        footer p {
+            margin: 5px 0;
+            color: var(--text-main);
+        }
+
+        .copyright-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin: 3px 0;
+        }
+
+        .copyright-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .copyright-btn i {
+            font-size: 1.1em;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: -400px; /* Start off-screen */
+            background: var(--section-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            max-width: 380px;
+            z-index: 1000;
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notification.show {
+            left: 20px;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notification-title {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .notification-close:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .notification-content {
+            color: var(--text-main);
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .notification-content p {
+            margin: 8px 0;
+        }
+
+        .notification-content .disclaimer {
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .answer details {
+            background: var(--blue3);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px; /* Add margin-top for spacing */
+        }
+
+        .answer details[open] {
+            background: var(--blue2); /* Slightly darker when open */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .answer summary {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            list-style: none; /* Hide default arrow */
+            position: relative;
+        }
+        .answer summary::marker,
+        .answer summary::-webkit-details-marker {
+            display: none; /* Hide default marker */
+        }
+
+        .answer summary i {
+            transition: transform 0.3s ease;
+        }
+
+        .answer details[open] summary i {
+            transform: rotate(90deg); /* Rotate icon when open */
+        }
+
+        .answer summary::after {
+            content: '\25B6'; /* Right-pointing triangle */
+            position: absolute;
+            right: 0;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .answer details[open] summary::after {
+            transform: rotate(90deg); /* Rotate triangle when open */
+        }
+
+        .answer details p,
+        .answer details ul {
+            margin-top: 15px; /* Spacing for content below summary */
+            padding-left: 0;
+        }
+
+        .answer details ul {
+            list-style: disc inside;
+            padding-left: 20px;
+        }
+
+        .answer details ul li {
+            margin-bottom: 8px;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(224, 247, 250, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: var(--text-main);
+            font-size: 1.5em;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        [data-theme="dark"] .loading-screen {
+            background: rgba(34, 47, 62, 0.8);
+        }
+
+        .loading-screen.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid var(--primary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        [data-theme="dark"] .loading-spinner {
+            border-top: 8px solid var(--secondary);
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--text-main);
+            text-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+        [data-theme="dark"] .loading-text {
+            text-shadow: 0 0 8px rgba(255,255,255,0.2);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .nav-dropdown-container {
+            display: none;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .nav-dropdown {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--blue1);
+            background: var(--section-bg);
+            color: var(--text-main);
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .nav-dropdown:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .nav-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--accent), var(--shadow);
+        }
+        
+        .nav-dropdown option {
+            background: var(--nav-bg);
+            color: var(--text-main);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-buttons {
+                display: none;
+            }
+            .nav-dropdown-container {
+                display: block;
+            }
+            .navigation {
+                padding: 10px;
+            }
+            .pros, .cons {
+                min-width: 100%;
+            }
+            .header {
+                padding-top: 50px;
+            }
+             .notification {
+                max-width: calc(100% - 40px);
+                left: -100%;
+            }
+            .notification.show {
+                left: 20px;
+            }
+        }
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: clamp(1.5em, 6vw, 2em);
+            }
+            .pros-cons {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Preparing your image...</p>
+    </div>
+    <div class="container">
+        <div class="header">
+            <div class="theme-toggle">
+                <div class="toggle-switch" id="themeSwitch">
+                    <div class="toggle-slider">
+                        <span class="icon-sun"><i class="fas fa-sun"></i></span>
+                        <span class="icon-moon"><i class="fas fa-moon"></i></span>
+                    </div>
+                </div>
+            </div>
+            <h1><i class="fas fa-shield-alt"></i> Data Security Learning Module</h1>
+            <p>Block Cipher Operation Modes</p>
+            <p>Created By Eng. Eslam Osama</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="download-buttons">
+                <button class="download-btn" onclick="downloadTopicContentZip()">
+                    <i class="fas fa-file-archive"></i> Download topic content in zip file
+                </button>
+                <button class="download-btn" onclick="downloadFullPageZip()">
+                    <i class="fas fa-images"></i> Download Sections as Images (ZIP)
+                </button>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-section="intro">
+                    <i class="fas fa-info-circle"></i> Introduction
+                </button>
+                <button class="nav-btn" data-section="ecb">
+                    <i class="fas fa-cube"></i> ECB Mode
+                </button>
+                <button class="nav-btn" data-section="cbc">
+                    <i class="fas fa-link"></i> CBC Mode
+                </button>
+                <button class="nav-btn" data-section="cfb">
+                    <i class="fas fa-exchange-alt"></i> CFB Mode
+                </button>
+                <button class="nav-btn" data-section="ofb">
+                    <i class="fas fa-arrow-right"></i> OFB Mode
+                </button>
+                <button class="nav-btn" data-section="ctr">
+                    <i class="fas fa-sort-numeric-up"></i> CTR Mode
+                </button>
+                <button class="nav-btn" data-section="quiz">
+                    <i class="fas fa-question-circle"></i> Review Questions
+                </button>
+            </div>
+            <div class="nav-dropdown-container">
+                <select id="navDropdown" class="nav-dropdown">
+                    <option value="intro">Introduction</option>
+                    <option value="ecb">ECB Mode</option>
+                    <option value="cbc">CBC Mode</option>
+                    <option value="cfb">CFB Mode</option>
+                    <option value="ofb">OFB Mode</option>
+                    <option value="ctr">CTR Mode</option>
+                    <option value="quiz">Review Questions</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Introduction Section -->
+        <div id="intro" class="section active">
+            <h2 class="section-title">Introduction to Block Cipher Modes
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="cipher-card">
+                <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-question-circle"></i> What are Block Cipher Operation Modes?
+                </h3>
+                <p>Block cipher operation modes are algorithms that define how block ciphers (like AES or DES) are applied to securely encrypt data larger than a single block. They provide different approaches to handle data encryption with unique security properties and performance characteristics.</p>
+                
+                <div class="cipher-card" style="margin-top: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-lightbulb"></i> Why are different modes needed?
+                    </h4>
+                    <ul style="list-style: none; padding-left: 20px;">
+                        <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); margin-top: 4px;"></i>
+                            <div>To securely encrypt data larger than a single block size</div>
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); margin-top: 4px;"></i>
+                            <div>To provide different security and performance trade-offs</div>
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); margin-top: 4px;"></i>
+                            <div>To handle various application requirements (streaming data, parallel processing, etc.)</div>
+                        </li>
+                        <li style="margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); margin-top: 4px;"></i>
+                            <div>To prevent pattern recognition in encrypted data</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="cipher-card">
+                <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-key"></i> Key Concepts
+                </h3>
+                
+                <div class="pros-cons" style="flex-direction: column; gap: 20px;">
+                    <div class="pros">
+                        <h4><i class="fas fa-check"></i> Block Cipher</h4>
+                        <p>A symmetric encryption algorithm that transforms a fixed-length block of plaintext into ciphertext</p>
+                        <ul>
+                            <li>Common block sizes: 64-bit (DES), 128-bit (AES)</li>
+                            <li>Requires modes to encrypt data larger than block size</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pros">
+                        <h4><i class="fas fa-sync-alt"></i> Initialization Vector (IV)</h4>
+                        <p>A random starting value used in several modes to ensure different ciphertexts for same plaintext</p>
+                        <ul>
+                            <li>Must be unpredictable and unique</li>
+                            <li>Typically not secret, but must be stored/transmitted securely</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ECB Mode Section -->
+        <div id="ecb" class="section">
+            <h2 class="section-title">Electronic Codebook (ECB) Mode
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="cipher-card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div class="mode-number">1</div>
+                    <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold;">
+                        Electronic Codebook (ECB) Mode
+                    </h3>
+                </div>
+                
+                <p>The simplest encryption mode where each block of plaintext is encrypted independently with the same key. <span class="key-term">Identical plaintext blocks</span> produce <span class="key-term">identical ciphertext blocks.</span></p>
+                
+                <div class="image-placeholder">
+                    <div class="card-image">
+                         <img src="media/image1.png" alt="ECB Mode Diagram">
+                    </div>
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4><i class="fas fa-check-circle"></i> Advantages</h4>
+                        <ul>
+                            <li>Simple to implement and understand</li>
+                            <li>Supports parallel encryption/decryption</li>
+                            <li>No error propagation between blocks</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="cons">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Disadvantages</h4>
+                        <ul>
+                            <li>Reveals patterns in plaintext (highly insecure)</li>
+                            <li>Vulnerable to replay attacks</li>
+                            <li>Not suitable for encrypting large amounts of data</li>
+                            <li>Does not provide strong confidentiality</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; background: var(--blue2); padding: 15px; border-radius: 10px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-code"></i> Technical Details
+                    </h4>
+                    <p><strong>Formula:</strong> C<sub>i</sub> = E<sub>K</sub>(P<sub>i</sub>)</p>
+                    <p><strong>Where:</strong> C<sub>i</sub> = ciphertext block, E<sub>K</sub> = encryption function with key K, P<sub>i</sub> = plaintext block</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CBC Mode Section -->
+        <div id="cbc" class="section">
+            <h2 class="section-title">Cipher Block Chaining (CBC) Mode
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="cipher-card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div class="mode-number">2</div>
+                    <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold;">
+                       Cipher Block Chaining (CBC) Mode
+                    </h3>
+                </div>
+                
+                <p>Each plaintext block is XORed with the previous ciphertext block before being encrypted. This creates a <span class="key-term">dependency chain</span> between blocks, hiding patterns.</p>
+                
+                <div class="image-placeholder">
+                    <div class="card-image">
+                        <img src="media/image2.png" alt="CBC Mode Diagram">
+                    </div>
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4><i class="fas fa-check-circle"></i> Advantages</h4>
+                        <ul>
+                            <li>Hides patterns in plaintext</li>
+                            <li>Better security than ECB for long messages</li>
+                            <li>Widely used and well-studied</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="cons">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Disadvantages</h4>
+                        <ul>
+                            <li>Encryption is sequential (cannot be parallelized)</li>
+                            <li>Errors in ciphertext propagate</li>
+                            <li>Requires an Initialization Vector (IV)</li>
+                            <li>Requires padding for the last block</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; background: var(--blue2); padding: 15px; border-radius: 10px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-code"></i> Technical Details
+                    </h4>
+                    <p><strong>Formula:</strong> C<sub>i</sub> = E<sub>K</sub>(P<sub>i</sub> ⊕ C<sub>i-1</sub>), with C<sub>0</sub> = IV</p>
+                    <p><strong>Where:</strong> IV = initialization vector, ⊕ = XOR operation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CFB Mode Section -->
+        <div id="cfb" class="section">
+            <h2 class="section-title">Cipher Feedback (CFB) Mode
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="cipher-card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div class="mode-number">3</div>
+                    <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold;">
+                       Cipher Feedback (CFB) Mode
+                    </h3>
+                </div>
+                
+                <p>Turns a block cipher into a <span class="key-term">self-synchronizing stream cipher</span>. The previous ciphertext block is encrypted and then XORed with the plaintext to produce the next ciphertext block.</p>
+                
+                <div class="image-placeholder">
+                    <div class="card-image">
+                        <img src="media/image3.png" alt="CFB Mode Diagram">
+                    </div>
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4><i class="fas fa-check-circle"></i> Advantages</h4>
+                        <ul>
+                            <li>Can operate on smaller units than the block size</li>
+                            <li>Self-synchronizing after errors</li>
+                            <li>Only the encryption function of the cipher is needed</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="cons">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Disadvantages</h4>
+                        <ul>
+                            <li>Encryption is sequential</li>
+                            <li>Errors propagate for several blocks</li>
+                            <li>Slower than other modes due to feedback</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; background: var(--blue2); padding: 15px; border-radius: 10px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-code"></i> Technical Details
+                    </h4>
+                    <p><strong>Formula:</strong> C<sub>i</sub> = P<sub>i</sub> ⊕ E<sub>K</sub>(C<sub>i-1</sub>), with C<sub>0</sub> = IV</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- OFB Mode Section -->
+        <div id="ofb" class="section">
+            <h2 class="section-title">Output Feedback (OFB) Mode
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="cipher-card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div class="mode-number">4</div>
+                    <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold;">
+                       Output Feedback (OFB) Mode
+                    </h3>
+                </div>
+                
+                <p>Turns a block cipher into a <span class="key-term">synchronous stream cipher</span>. It generates a keystream by repeatedly encrypting an IV, which is then XORed with the plaintext.</p>
+                
+                <div class="image-placeholder">
+                    <div class="card-image">
+                        <img src="media/image4.png" alt="OFB Mode Diagram">
+                    </div>
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4><i class="fas fa-check-circle"></i> Advantages</h4>
+                        <ul>
+                            <li>Bit errors in ciphertext do not propagate</li>
+                            <li>Keystream can be pre-computed</li>
+                            <li>Only encryption function is needed</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="cons">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Disadvantages</h4>
+                        <ul>
+                            <li>Vulnerable to stream reuse attacks if IV is repeated</li>
+                            <li>Not self-synchronizing</li>
+                            <li>Encryption is sequential</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; background: var(--blue2); padding: 15px; border-radius: 10px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-code"></i> Technical Details
+                    </h4>
+                    <p><strong>Keystream:</strong> O<sub>i</sub> = E<sub>K</sub>(O<sub>i-1</sub>), with O<sub>0</sub> = IV</p>
+                    <p><strong>Encryption:</strong> C<sub>i</sub> = P<sub>i</sub> ⊕ O<sub>i</sub></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTR Mode Section -->
+        <div id="ctr" class="section">
+            <h2 class="section-title">Counter (CTR) Mode
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="cipher-card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div class="mode-number">5</div>
+                    <h3 style="color: var(--primary); font-size: 1.25em; font-weight: bold;">
+                        Counter (CTR) Mode
+                    </h3>
+                </div>
+                
+                <p>Also turns a block cipher into a stream cipher. It generates a keystream by encrypting successive values of a "counter". This mode is <span class="key-term">highly parallelizable</span>.</p>
+                
+                <div class="image-placeholder">
+                    <div class="card-image">
+                        <img src="media/image5.png" alt="CTR Mode Diagram">
+                    </div>
+                </div>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4><i class="fas fa-check-circle"></i> Advantages</h4>
+                        <ul>
+                            <li>Highly parallelizable for high performance</li>
+                            <li>Random access to any block is possible</li>
+                            <li>No padding required</li>
+                            <li>Keystream can be pre-computed</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="cons">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Disadvantages</h4>
+                        <ul>
+                            <li>Requires a unique counter for every block (nonce)</li>
+                            <li>Catastrophic failure if counter/nonce is reused</li>
+                            <li>No built-in integrity protection</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; background: var(--blue2); padding: 15px; border-radius: 10px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-code"></i> Technical Details
+                    </h4>
+                    <p><strong>Keystream:</strong> O<sub>i</sub> = E<sub>K</sub>(Nonce || Counter<sub>i</sub>)</p>
+                    <p><strong>Encryption:</strong> C<sub>i</sub> = P<sub>i</sub> ⊕ O<sub>i</sub></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz" class="section">
+            <h2 class="section-title">Review Questions
+                <button class="download-section-btn" onclick="downloadSectionPng(this)">
+                    <i class="fas fa-download"></i>
+                </button>
+            </h2>
+            
+            <div class="image-placeholder">
+                <div class="card-image">
+                    <img src="media/image6.png" alt="Review Questions Image">
+                </div>
+            </div>
+
+            
+            <div class="question-card">
+                <h3><i class="fas fa-question-circle"></i> Question 1: ECB vs CBC Security</h3>
+                <div class="question-text">
+                    <p>Why is ECB mode considered insecure for encrypting large amounts of data or structured data, while CBC mode provides better security?</p>
+                </div>
+                <div class="answer">
+                    <details>
+                        <summary><h4><i class="fas fa-lightbulb"></i> Answer</h4></summary>
+                        <p>ECB mode encrypts identical plaintext blocks into identical ciphertext blocks, revealing patterns in the data. This is particularly problematic for structured data like images or documents where patterns are common. CBC mode XORs each plaintext block with the previous ciphertext block before encryption, ensuring that identical plaintext blocks produce different ciphertext blocks, thus hiding patterns and providing better confidentiality.</p>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="question-card">
+                <h3><i class="fas fa-question-circle"></i> Question 2: CFB vs OFB Error Handling</h3>
+                <div class="question-text">
+                    <p>Compare how CFB and OFB modes handle transmission errors. Why does OFB have an advantage in noisy communication channels?</p>
+                </div>
+                <div class="answer">
+                    <details>
+                        <summary><h4><i class="fas fa-lightbulb"></i> Answer</h4></summary>
+                        <p>In CFB mode, errors propagate because the decryption of each block depends on previous ciphertext blocks. A single bit error in ciphertext will cause errors in the current block and potentially the next few blocks (depending on the feedback size). In OFB mode, the keystream is generated independently of the ciphertext. A transmission error affects only the specific bit where it occurred, without propagating to other blocks. This makes OFB more suitable for noisy channels where bit errors are likely.</p>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="question-card">
+                <h3><i class="fas fa-question-circle"></i> Question 3: CTR Mode Advantages</h3>
+                <div class="question-text">
+                    <p>What are the main advantages of CTR mode over CBC mode? Explain in terms of implementation benefits in software, hardware, and decryption throughput.</p>
+                </div>
+                <div class="answer">
+                    <details>
+                        <summary><h4><i class="fas fa-lightbulb"></i> Answer</h4></summary>
+                        <p>CTR mode offers several advantages over CBC:</p>
+                        <ul>
+                            <li><strong>Parallel Processing:</strong> Both encryption and decryption can be parallelized since blocks don't depend on previous results.</li>
+                            <li><strong>Throughput:</strong> Higher decryption throughput possible with multiple processors.</li>
+                            <li><strong>Implementation:</strong> Requires only the encryption function, simplifying hardware/software design.</li>
+                            <li><strong>Precomputation:</strong> Keystream can be generated before data is available.</li>
+                            <li><strong>Random Access:</strong> Allows decryption of any block without processing previous blocks.</li>
+                        </ul>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Data Security Learning Module - Block Cipher Operation Modes | Designed for Educational Purposes | By Eng. Eslam Osama</p>
+            <div class="copyright-notice">
+                <button class="copyright-btn" onclick="showCopyrightNotice()">
+                    <i class="fas fa-copyright"></i> Copyright Notice
+                </button>
+            </div>
+        </div>
+    </footer>
+    <div class="notification" id="copyrightNotification">
+        <div class="notification-header">
+            <div class="notification-title">
+                <i class="fas fa-shield-alt"></i> Copyright Notice
+            </div>
+            <button class="notification-close" onclick="hideCopyrightNotice()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notification-content">
+            <p>This content is protected by copyright law. Unauthorized copying, distribution, or use of this material is strictly prohibited. The code, design, and content of this educational module are the exclusive property of the creator.</p>
+            <p class="disclaimer">This module is provided for educational purposes only.</p>
+        </div>
+    </div>
+
+
+    <script>
+        // --- THEME TOGGLE ---
+        const themeSwitch = document.getElementById('themeSwitch');
+        const root = document.documentElement;
+        function setTheme(mode) {
+            if (mode === 'dark') {
+                root.setAttribute('data-theme', 'dark');
+                themeSwitch.classList.add('dark');
+            } else {
+                root.removeAttribute('data-theme');
+                themeSwitch.classList.remove('dark');
+            }
+            localStorage.setItem('theme', mode);
+        }
+        themeSwitch.addEventListener('click', () => {
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            setTheme(isDark ? 'light' : 'dark');
+        });
+        // Set initial theme on load
+        (() => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                setTheme('dark');
+            }
+        })();
+
+        // --- PROGRESS BAR ---
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        window.addEventListener('scroll', updateProgressBar);
+        
+        // --- NAVIGATION ---
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.section === sectionId);
+            });
+            // Sync dropdown
+            document.getElementById('navDropdown').value = sectionId;
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                showSection(this.dataset.section);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        
+        document.getElementById('navDropdown').addEventListener('change', function() {
+             showSection(this.value);
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Update nav on scroll
+        function updateNavOnScroll() {
+            let currentSection = '';
+            document.querySelectorAll('.section').forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 150) {
+                    currentSection = section.id;
+                }
+            });
+            
+            if (currentSection) {
+                 document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.section === currentSection);
+                 });
+                 document.getElementById('navDropdown').value = currentSection;
+            }
+        }
+        window.addEventListener('scroll', updateNavOnScroll);
+
+        // --- LOADING SCREEN ---
+        const loadingScreen = document.getElementById('loadingScreen');
+        function showLoadingScreen(message = 'Processing...') {
+            loadingScreen.querySelector('.loading-text').textContent = message;
+            loadingScreen.classList.add('show');
+        }
+        function hideLoadingScreen() {
+            loadingScreen.classList.remove('show');
+        }
+
+        // --- FOOTER NOTIFICATION ---
+        const copyrightNotification = document.getElementById('copyrightNotification');
+        function showCopyrightNotice() {
+            copyrightNotification.classList.add('show');
+            setTimeout(hideCopyrightNotice, 5000);
+        }
+        function hideCopyrightNotice() {
+            copyrightNotification.classList.remove('show');
+        }
+        // Auto show notice on first load
+        document.addEventListener('DOMContentLoaded', () => {
+             setTimeout(showCopyrightNotice, 2000);
+        });
+
+        // --- DOWNLOAD FUNCTIONALITY ---
+
+        // New function to download specified PDF assets as a ZIP
+        async function downloadTopicContentZip() {
+            showLoadingScreen('Creating content ZIP...');
+            try {
+                const zip = new JSZip();
+
+                // Create dummy content for the PDFs as we can't access local files
+                const pdfContent1 = "This is a placeholder for 'Block Cipher Operation Modes.pdf'.";
+                const pdfContent2 = "This is a placeholder for 'Sheet7.pdf'.";
+                
+                // Add the dummy files to the zip
+                zip.file("assets/Block Cipher Operation Modes.pdf", pdfContent1);
+                zip.file("assets/Sheet7.pdf", pdfContent2);
+
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+                saveAs(zipBlob, 'Topic-Content.zip');
+            } catch (error) {
+                 console.error("Topic ZIP Generation Error:", error);
+                 alert("Sorry, there was an error creating the content ZIP file.");
+            } finally {
+                hideLoadingScreen();
+            }
+        }
+
+        async function downloadSectionPng(button) {
+            showLoadingScreen('Preparing image...');
+            const section = button.closest('.section');
+            if (!section) {
+                hideLoadingScreen();
+                return;
+            }
+            
+            // Temporarily hide the button being clicked
+            button.classList.add('screenshot-hide');
+
+            try {
+                const canvas = await html2canvas(section, {
+                    backgroundColor: null,
+                    useCORS: true,
+                    scale: 2,
+                    logging: false
+                });
+                const link = document.createElement('a');
+                link.download = `deepseek-modes-${section.id}.png`;
+                link.href = canvas.toDataURL('image/png', 0.95);
+                link.click();
+            } catch (error) {
+                console.error("PNG Generation Error:", error);
+                alert("Sorry, there was an error creating the image.");
+            } finally {
+                // Show the button again
+                button.classList.remove('screenshot-hide');
+                hideLoadingScreen();
+            }
+        }
+
+        async function downloadFullPageZip() {
+            showLoadingScreen('Creating image ZIP file...');
+            const zip = new JSZip();
+            const sectionIds = ['intro', 'ecb', 'cbc', 'cfb', 'ofb', 'ctr', 'quiz'];
+            const downloadButtons = document.querySelectorAll('.download-section-btn, .download-btn');
+            
+            // Hide all download buttons for the screenshots
+            downloadButtons.forEach(b => b.classList.add('screenshot-hide'));
+
+            try {
+                for (const id of sectionIds) {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        const canvas = await html2canvas(section, {
+                           backgroundColor: null,
+                           useCORS: true,
+                           scale: 2
+                        });
+                        const imgData = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+                        zip.file(`${id}.jpeg`, imgData);
+                    }
+                }
+                
+                const zipBlob = await zip.generateAsync({ type: 'blob' });
+                saveAs(zipBlob, 'Block-Cipher-Modes-Sections.zip');
+
+            } catch(error) {
+                console.error("Full Page ZIP Generation Error:", error);
+                alert("Sorry, there was an error creating the ZIP file of images.");
+            } finally {
+                 // Restore all download buttons
+                 downloadButtons.forEach(b => b.classList.remove('screenshot-hide'));
+                 hideLoadingScreen();
+            }
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgressBar();
+            updateNavOnScroll();
+        });
+    </script>
+</body>
+</html>
