@@ -1409,6 +1409,13 @@
             // Temporarily hide the button being clicked
             button.classList.add('screenshot-hide');
 
+            let detailsElements = [];
+            // If it's the quiz section, open all details elements
+            if (section.id === 'quiz') {
+                detailsElements = section.querySelectorAll('details');
+                detailsElements.forEach(detail => detail.setAttribute('open', ''));
+            }
+
             try {
                 const canvas = await html2canvas(section, {
                     backgroundColor: null,
@@ -1426,6 +1433,8 @@
             } finally {
                 // Show the button again
                 button.classList.remove('screenshot-hide');
+                // Close all details elements that were opened
+                detailsElements.forEach(detail => detail.removeAttribute('open'));
                 hideLoadingScreen();
             }
         }
@@ -1439,10 +1448,24 @@
             // Hide all download buttons for the screenshots
             downloadButtons.forEach(b => b.classList.add('screenshot-hide'));
 
+            // Store details elements that need to be re-closed
+            const detailsToClose = [];
+
             try {
                 for (const id of sectionIds) {
                     const section = document.getElementById(id);
                     if (section) {
+                        // If it's the quiz section, open all details elements
+                        if (id === 'quiz') {
+                            const quizDetails = section.querySelectorAll('details');
+                            quizDetails.forEach(detail => {
+                                if (!detail.hasAttribute('open')) {
+                                    detail.setAttribute('open', '');
+                                    detailsToClose.push(detail);
+                                }
+                            });
+                        }
+
                         const canvas = await html2canvas(section, {
                            backgroundColor: null,
                            useCORS: true,
@@ -1462,6 +1485,8 @@
             } finally {
                  // Restore all download buttons
                  downloadButtons.forEach(b => b.classList.remove('screenshot-hide'));
+                 // Close any details elements that were opened
+                 detailsToClose.forEach(detail => detail.removeAttribute('open'));
                  hideLoadingScreen();
             }
         }
