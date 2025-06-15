@@ -40,7 +40,9 @@ The webpage was built by transforming content from two official course sheets (`
 ## 📁 Folder Structure
 
 /block-cipher-operation-modes
+
 │
+
 ├── index.html # Main webpage
 
 ├── media/ # Diagrams/images used in each cipher mode
@@ -50,7 +52,7 @@ The webpage was built by transforming content from two official course sheets (`
 ├── Block Cipher Operation Modes.pdf # Content source (PDF)
 
 ├── README.md # This file
-حرير
+
 
 ## 👨‍🏫 Acknowledgements
 
