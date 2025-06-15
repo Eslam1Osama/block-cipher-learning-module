@@ -42,9 +42,13 @@ The webpage was built by transforming content from two official course sheets (`
 /block-cipher-operation-modes
 │
 ├── index.html # Main webpage
+
 ├── media/ # Diagrams/images used in each cipher mode
+
 ├── Sheet7.pdf # Review questions (PDF)
+
 ├── Block Cipher Operation Modes.pdf # Content source (PDF)
+
 ├── README.md # This file
 حرير
 
