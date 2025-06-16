@@ -1262,8 +1262,8 @@
             </button>
         </div>
         <div class="notification-content">
-            <p>This content is protected by copyright law. Unauthorized copying, distribution, or use of this material is strictly prohibited. The code, design, and content of this educational module are the exclusive property of the creator.</p>
-            <p class="disclaimer">This module is provided for educational purposes only.</p>
+            <p>This content is protected by copyright law. Unauthorized copying, distribution, or use of this material is strictly prohibited. The code, design, and content of this educational module are the exclusive property of the creator. Any reproduction or distribution without express written permission is a violation of copyright law.</p>
+            <p class="disclaimer">This module is provided for educational purposes only. The creator makes no warranties about the completeness, reliability, or accuracy of this information.</p>
         </div>
     </div>
 
@@ -1350,11 +1350,11 @@
 
         // --- LOADING SCREEN ---
         const loadingScreen = document.getElementById('loadingScreen');
-        function showLoadingScreen(message = 'Processing...') {
+        function showLoading(message = 'Processing...') {
             loadingScreen.querySelector('.loading-text').textContent = message;
             loadingScreen.classList.add('show');
         }
-        function hideLoadingScreen() {
+        function hideLoading() {
             loadingScreen.classList.remove('show');
         }
 
@@ -1374,9 +1374,12 @@
 
         // --- DOWNLOAD FUNCTIONALITY ---
 
-        // New function to download specified PDF assets as a ZIP
+        function downloadOriginalSheet() {
+             window.open('assets/Digital_Sign_Sheet_9.pdf', '_blank');
+        }
+
         async function downloadTopicContentZip() {
-            showLoadingScreen('Creating content ZIP...');
+            showLoading('Creating content ZIP...');
             try {
                 const zip = new JSZip();
 
@@ -1394,100 +1397,145 @@
                  console.error("Topic ZIP Generation Error:", error);
                  alert("Sorry, there was an error creating the content ZIP file.");
             } finally {
-                hideLoadingScreen();
+                hideLoading();
             }
         }
 
-        async function downloadSectionPng(button) {
-            showLoadingScreen('Preparing image...');
-            const section = button.closest('.section');
-            if (!section) {
-                hideLoadingScreen();
-                return;
-            }
+        async function prepareForCanvas(section) {
+            // Hide all download buttons and navigation
+            document.querySelectorAll('.download-section-btn, .download-btn, .navigation').forEach(el => el.classList.add('screenshot-hide'));
             
-            // Temporarily hide the button being clicked
-            button.classList.add('screenshot-hide');
-
+            // Check if it's the quiz section and open all details elements
             let detailsElements = [];
-            // If it's the quiz section, open all details elements
             if (section.id === 'quiz') {
-                detailsElements = section.querySelectorAll('details');
+                detailsElements = section.querySelectorAll('.question-card details');
                 detailsElements.forEach(detail => detail.setAttribute('open', ''));
             }
+            
+            // Wait for animations to complete and ensure content is fully expanded
+            await new Promise(r => setTimeout(r, 1200)); // Increased timeout for full expansion
+            
+            // Force multiple reflows to ensure all content is rendered
+            section.offsetHeight;
+            section.offsetHeight;
+            
+            // Final wait to ensure all styles are applied
+            await new Promise(r => setTimeout(r, 300));
+        }
+        
+        function cleanupAfterCanvas() {
+            // Restore visibility of download buttons and navigation
+            document.querySelectorAll('.screenshot-hide').forEach(el => el.classList.remove('screenshot-hide'));
 
+            // Close all details elements that were opened for screenshotting
+            document.querySelectorAll('.question-card details[open]').forEach(detail => {
+                detail.removeAttribute('open');
+            });
+        }
+
+        async function downloadSectionPng(buttonEl) {
+            const section = buttonEl.closest('.section');
+            if (!section) return;
+
+            showLoading('Preparing section image...');
+            
             try {
+                await prepareForCanvas(section);
+                
                 const canvas = await html2canvas(section, {
-                    backgroundColor: null,
-                    useCORS: true,
                     scale: 2,
-                    logging: false
+                    useCORS: true,
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('background-color'),
+                    logging: false,
+                    onclone: (clonedDoc) => {
+                        // Ensure all answers are visible in the cloned document
+                        const clonedSection = clonedDoc.querySelector(`#${section.id}`);
+                        if (clonedSection && clonedSection.id === 'quiz') {
+                            clonedSection.querySelectorAll('.question-card details').forEach(detail => {
+                                detail.setAttribute('open', '');
+                            });
+                        }
+                    }
                 });
+
                 const link = document.createElement('a');
-                link.download = `deepseek-modes-${section.id}.png`;
-                link.href = canvas.toDataURL('image/png', 0.95);
+                link.download = `${section.id}-section.jpeg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
                 link.click();
-            } catch (error) {
-                console.error("PNG Generation Error:", error);
+            } catch (err) {
+                console.error("Failed to generate section image:", err);
                 alert("Sorry, there was an error creating the image.");
             } finally {
-                // Show the button again
-                button.classList.remove('screenshot-hide');
-                // Close all details elements that were opened
-                detailsElements.forEach(detail => detail.removeAttribute('open'));
-                hideLoadingScreen();
+                cleanupAfterCanvas();
+                hideLoading();
             }
         }
 
         async function downloadFullPageZip() {
-            showLoadingScreen('Creating image ZIP file...');
-            const zip = new JSZip();
-            const sectionIds = ['intro', 'ecb', 'cbc', 'cfb', 'ofb', 'ctr', 'quiz'];
-            const downloadButtons = document.querySelectorAll('.download-section-btn, .download-btn');
+            showLoading('Creating ZIP file...');
             
-            // Hide all download buttons for the screenshots
-            downloadButtons.forEach(b => b.classList.add('screenshot-hide'));
+            const zip = new JSZip();
+            const sections = document.querySelectorAll('.section');
 
-            // Store details elements that need to be re-closed
-            const detailsToClose = [];
+            // Store the currently active section to restore it later
+            const activeSectionId = document.querySelector('.section.active')?.id;
 
-            try {
-                for (const id of sectionIds) {
-                    const section = document.getElementById(id);
-                    if (section) {
-                        // If it's the quiz section, open all details elements
-                        if (id === 'quiz') {
-                            const quizDetails = section.querySelectorAll('details');
-                            quizDetails.forEach(detail => {
-                                if (!detail.hasAttribute('open')) {
+            for (const section of sections) {
+                try {
+                    // Temporarily make the section active and visible for capture
+                    const originalDisplay = section.style.display;
+                    const wasActive = section.classList.contains('active');
+                    section.style.display = 'block'; 
+                    section.classList.add('active');
+
+                    await prepareForCanvas(section);
+                    
+                    const canvas = await html2canvas(section, {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: getComputedStyle(document.body).getPropertyValue('background-color'),
+                        logging: false,
+                        onclone: (clonedDoc) => {
+                            // Ensure quiz answers are open in the cloned document
+                            const clonedSection = clonedDoc.querySelector(`#${section.id}`);
+                            if (clonedSection && clonedSection.id === 'quiz') {
+                                clonedSection.querySelectorAll('.question-card details').forEach(detail => {
                                     detail.setAttribute('open', '');
-                                    detailsToClose.push(detail);
-                                }
-                            });
+                                });
+                            }
                         }
+                    });
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+                    zip.file(`${section.id}.jpeg`, blob);
 
-                        const canvas = await html2canvas(section, {
-                           backgroundColor: null,
-                           useCORS: true,
-                           scale: 2
-                        });
-                        const imgData = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
-                        zip.file(`${id}.jpeg`, imgData);
+                    // Restore original display and active state
+                    section.style.display = originalDisplay;
+                    if (!wasActive) {
+                        section.classList.remove('active');
                     }
+
+                } catch (err) {
+                    console.error(`Failed to capture section ${section.id}:`, err);
                 }
-                
+            }
+            
+            try {
                 const zipBlob = await zip.generateAsync({ type: 'blob' });
                 saveAs(zipBlob, 'Block-Cipher-Modes-Sections.zip');
-
-            } catch(error) {
-                console.error("Full Page ZIP Generation Error:", error);
-                alert("Sorry, there was an error creating the ZIP file of images.");
+            } catch (err) {
+                console.error("Failed to generate ZIP:", err);
+                alert("Sorry, there was an error creating the ZIP file.");
             } finally {
-                 // Restore all download buttons
-                 downloadButtons.forEach(b => b.classList.remove('screenshot-hide'));
-                 // Close any details elements that were opened
-                 detailsToClose.forEach(detail => detail.removeAttribute('open'));
-                 hideLoadingScreen();
+                cleanupAfterCanvas();
+                // Restore the original active section
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                if (activeSectionId) {
+                    const originalActiveSection = document.getElementById(activeSectionId);
+                    if (originalActiveSection) {
+                        originalActiveSection.classList.add('active');
+                    }
+                }
+                hideLoading();
             }
         }
 
