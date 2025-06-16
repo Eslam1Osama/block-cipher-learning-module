@@ -157,7 +157,7 @@
 
         .nav-btn {
             background: var(--nav-btn-bg);
-            color: var(--text-main);
+            color: white;
             border: none;
             padding: 12px 20px;
             border-radius: 25px;
@@ -188,6 +188,11 @@
         }
         .section.active {
             display: block;
+        }
+
+        /* White background for intro section in light mode */
+        :root:not([data-theme="dark"]) #intro.section {
+            background: #ffffff;
         }
 
         .section-title {
@@ -1191,6 +1196,11 @@
                 </div>
             </div>
 
+            <div style="margin-bottom: 25px; text-align: center;">
+                <button class="download-btn" id="toggleAllAnswersBtn">
+                    <i class="fas fa-eye"></i> <span id="toggleAllAnswersText">Show All Answers</span>
+                </button>
+            </div>
             
             <div class="question-card">
                 <h3><i class="fas fa-question-circle"></i> Question 1: ECB vs CBC Security</h3>
@@ -1296,57 +1306,70 @@
             }
         })();
 
-        // --- PROGRESS BAR ---
+        // --- Progress Bar --- 
+        const sections = document.querySelectorAll('.section');
+        const progressBar = document.getElementById('progressBar');
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const navDropdown = document.getElementById('navDropdown');
+
         function updateProgressBar() {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (scrollTop / docHeight) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-        window.addEventListener('scroll', updateProgressBar);
-        
-        // --- NAVIGATION ---
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.section === sectionId);
-            });
-            // Sync dropdown
-            document.getElementById('navDropdown').value = sectionId;
+            const activeSection = document.querySelector('.section.active');
+            if (!activeSection) return;
+
+            const sectionIndex = Array.from(sections).indexOf(activeSection);
+            const progress = (sectionIndex / (sections.length - 1)) * 100;
+            progressBar.style.width = progress + '%';
         }
 
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                showSection(this.dataset.section);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+        // --- Navigation ---
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
             });
-        });
-        
-        document.getElementById('navDropdown').addEventListener('change', function() {
-             showSection(this.value);
-             window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        
-        // Update nav on scroll
-        function updateNavOnScroll() {
-            let currentSection = '';
-            document.querySelectorAll('.section').forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 150) {
-                    currentSection = section.id;
-                }
-            });
-            
-            if (currentSection) {
-                 document.querySelectorAll('.nav-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.section === currentSection);
-                 });
-                 document.getElementById('navDropdown').value = currentSection;
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active');
             }
+            
+            navButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.section === sectionId);
+            });
+            if(navDropdown.value !== sectionId) {
+                navDropdown.value = sectionId;
+            }
+            updateProgressBar();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        window.addEventListener('scroll', updateNavOnScroll);
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => showSection(btn.dataset.section));
+        });
+        
+        navDropdown.addEventListener('change', () => showSection(navDropdown.value));
+
+        // --- Accordion/Question Toggle ---
+        const quizSection = document.getElementById('quiz');
+        const questions = quizSection ? quizSection.querySelectorAll('.question-card details') : [];
+        const toggleAllBtn = document.getElementById('toggleAllAnswersBtn');
+        const toggleAllBtnText = document.getElementById('toggleAllAnswersText');
+
+        if (toggleAllBtn) {
+            toggleAllBtn.addEventListener('click', () => {
+                const isAllShown = Array.from(questions).every(detail => detail.hasAttribute('open'));
+                if (isAllShown) {
+                    // Hide all
+                    questions.forEach(detail => detail.removeAttribute('open'));
+                    toggleAllBtn.classList.remove('all-shown');
+                    toggleAllBtnText.textContent = 'Show All Answers';
+                } else {
+                    // Show all
+                    questions.forEach(detail => detail.setAttribute('open', ''));
+                    toggleAllBtn.classList.add('all-shown');
+                    toggleAllBtnText.textContent = 'Hide All Answers';
+                }
+                if (quizSection) quizSection.offsetHeight; // Force reflow
+            });
+        }
 
         // --- LOADING SCREEN ---
         const loadingScreen = document.getElementById('loadingScreen');
@@ -1541,8 +1564,7 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            updateProgressBar();
-            updateNavOnScroll();
+            showSection('intro'); // Set initial section to Introduction
         });
     </script>
 </body>
