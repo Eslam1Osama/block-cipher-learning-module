@@ -137,42 +137,29 @@
         }
 
         .navigation {
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 50px;
-            padding: 15px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            background: var(--nav-bg); backdrop-filter: blur(10px); border-radius: 50px;
+            padding: 15px; margin-bottom: 30px; display: flex; justify-content: center;
+            flex-wrap: wrap; gap: 10px; position: sticky; top: 10px; z-index: 100;
         }
-
         .nav-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
         }
-
         .nav-btn {
-            background: var(--nav-btn-bg);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            background: var(--nav-btn-bg); color: white; border: none; padding: 12px 20px;
+            border-radius: 25px; cursor: pointer; transition: var(--transition); font-weight: 500;
+            display: flex; align-items: center; gap: 8px;
         }
-
         .nav-btn:hover, .nav-btn.active {
-            background: var(--nav-btn-active-bg);
-            transform: translateY(-2px);
+            background: var(--nav-btn-active-bg); transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+        .nav-dropdown-container { display: none; width: 100%; padding: 0 10px; }
+        .nav-dropdown {
+            width: 100%; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--blue1);
+            background: var(--section-bg); color: var(--text-main); font-size: 1em;
+            font-weight: 500; cursor: pointer; appearance: none; -webkit-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat; background-position: right 15px center;
         }
 
         .section {
