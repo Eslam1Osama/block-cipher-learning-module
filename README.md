@@ -1,7 +1,5 @@
 # Data Security Learning Module: Block Cipher Operation Modes
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 An interactive, single-page web application designed to teach the core concepts of **Block Cipher Operation Modes** for the **ECE4304 Data Security** course. This project transforms complex cryptographic concepts into a responsive, engaging, and easy-to-understand learning experience.
 
 ### [Live Demo Link](https://block-cipher-learning-module.vercel.app/)
@@ -43,6 +41,14 @@ This module provides a comprehensive overview of the five primary block cipher m
 -   **[FileSaver.js](https://github.com/eligrey/FileSaver.js/)**: For saving the generated files.
 -   **[Font Awesome](https://fontawesome.com/)**: For icons.
 
+## ⚖️ License & Copyright
+
+**© 2025 Eng. Eslam Osama. All Rights Reserved.**
+
+This content is protected by copyright law. Unauthorized copying, distribution, or use of this material is strictly prohibited. The code, design, and content of this educational module are the exclusive property of the creator. Any reproduction or distribution without express written permission is a violation of copyright law.
+
+This module is provided for educational purposes only. The creator makes no warranties about the completeness, reliability, or accuracy of this information.
+
 ## 🚀 Getting Started
 
 No complex build steps or dependencies are required.
@@ -62,3 +68,4 @@ No complex build steps or dependencies are required.
 -   This project was developed for the **Computer Engineering Department** at the **College of Engineering & Technology, AASTMT**.
 -   **Course Instructor:** Dr. Mahmoud Yehia
 -   **Lead Developer & TA:** Eng. Eslam Osama
+
