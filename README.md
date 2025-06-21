@@ -49,20 +49,6 @@ This content is protected by copyright law. Unauthorized copying, distribution, 
 
 This module is provided for educational purposes only. The creator makes no warranties about the completeness, reliability, or accuracy of this information.
 
-## 🚀 Getting Started
-
-No complex build steps or dependencies are required.
-
-1.  Clone the repository:
-    ```bash
-    git clone [https://github.com/your-username/data-security-block-cipher-module.git](https://github.com/your-username/data-security-block-cipher-module.git)
-    ```
-2.  Navigate to the project directory:
-    ```bash
-    cd data-security-block-cipher-module
-    ```
-3.  Open the `index.html` file in your browser.
-
 ## Acknowledgments
 
 -   This project was developed for the **Computer Engineering Department** at the **College of Engineering & Technology, AASTMT**.
