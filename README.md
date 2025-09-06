@@ -1,9 +1,21 @@
 # 🔐 Block Cipher Operation Modes - Data Security Learning Module
 
+<div align="center">
+
+![Block Ciphers Logo](assets/logo.svg)
+
+**Enterprise-Grade Educational Technology Solution**
+
+*A comprehensive, interactive web application for mastering Digital Signatures and Cryptography concepts*
+
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Project-00ACC1?style=for-the-badge&logo=vercel)](https://block-cipher-learning.vercel.app/)
 [![License](https://img.shields.io/badge/License-Commercial-red?style=for-the-badge)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.0-4DD0E1?style=for-the-badge&logo=semver)](package.json)
 
-> **Enterprise-Grade Educational Platform** - Professional implementation of cryptography concepts with modern web technologies
+**Developed by [EOPeak](https://eslam-portfolio-phi.vercel.app/) | Eng. Eslam Osama Saad**
+
+</div>
+
 
 ## 📋 Table of Contents
 
