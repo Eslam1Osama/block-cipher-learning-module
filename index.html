@@ -3,8 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
     <title>Block Cipher Operation Modes - Data Security Learning Module</title>
+    <meta name="title" content="Block Cipher Operation Modes - Data Security Learning Module">
+    <meta name="description" content="Interactive educational module for learning Block Cipher Operation Modes (ECB, CBC, CFB, OFB, CTR). Includes diagrams, examples, technical formulas, and review questions for ECE4304 Data Security course.">
+    <meta name="keywords" content="block cipher, ECB, CBC, CFB, OFB, CTR, cryptography, data security, encryption modes, AES, DES, computer engineering, AASTMT">
+    <meta name="author" content="Eng. Eslam Osama Saad">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="category" content="Education">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://block-cipher-learning.vercel.app/">
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="assets/logo_simple.svg">
+    <link rel="icon" type="image/x-icon" href="assets/logo_simple.svg">
+    <link rel="apple-touch-icon" href="assets/logo.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="mask-icon" href="assets/logo_simple.svg" color="#00ACC1">
+    <meta name="msapplication-TileColor" content="#00ACC1">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <meta name="theme-color" content="#00ACC1">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://block-cipher-learning.vercel.app/">
+    <meta property="og:title" content="Block Cipher Operation Modes - Data Security Learning Module">
+    <meta property="og:description" content="Interactive educational module for learning Block Cipher Operation Modes (ECB, CBC, CFB, OFB, CTR). Includes diagrams, examples, and review questions.">
+    <meta property="og:image" content="https://block-cipher-learning.vercel.app/assets/logo.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Block Cipher Learning Module Logo - Shield with Lock and Circuit Pattern">
+    <meta property="og:site_name" content="Block Cipher Learning Module">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://block-cipher-learning.vercel.app/">
+    <meta name="twitter:title" content="Block Cipher Operation Modes - Data Security Learning Module">
+    <meta name="twitter:description" content="Interactive educational module for learning Block Cipher Operation Modes (ECB, CBC, CFB, OFB, CTR). Includes diagrams, examples, and review questions.">
+    <meta name="twitter:image" content="https://block-cipher-learning.vercel.app/assets/logo.svg">
+    <meta name="twitter:image:alt" content="Block Cipher Learning Module Logo">
+    <meta name="twitter:creator" content="@eslam_osama">
+    <meta name="twitter:site" content="@blockcipherlearn">
+
+    <!-- LinkedIn -->
+    <meta property="og:image:secure_url" content="https://block-cipher-learning.vercel.app/assets/logo.svg">
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="application-name" content="Block Cipher Learning Module">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Block Cipher Learning">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- Performance and Caching -->
+    <meta http-equiv="Cache-Control" content="max-age=86400">
+
+    <!--
+    NOTE: Security headers (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy)
+    must be set via HTTP headers by the web server, not through meta tags.
+    Configure these in your server configuration (.htaccess, nginx.conf, etc.):
+    - X-Frame-Options: DENY
+    - X-Content-Type-Options: nosniff
+    - X-XSS-Protection: 1; mode=block
+    - Referrer-Policy: strict-origin-when-cross-origin
+    -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Block Cipher Operation Modes Learning Module",
+      "description": "Interactive educational module for learning Block Cipher Operation Modes (ECB, CBC, CFB, OFB, CTR)",
+      "url": "https://block-cipher-learning.vercel.app/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "author": {
+        "@type": "Person",
+        "name": "Eng. Eslam Osama Saad",
+        "jobTitle": "Computer Engineering Student",
+        "affiliation": {
+          "@type": "EducationalOrganization",
+          "name": "Arab Academy for Science, Technology & Maritime Transport (AASTMT)"
+        }
+      },
+      "publisher": {
+        "@type": "EducationalOrganization",
+        "name": "College of Engineering & Technology - AASTMT"
+      },
+      "educationalUse": "CourseMaterial",
+      "learningResourceType": "Interactive Learning Module",
+      "teaches": [
+        "Block Cipher Operation Modes",
+        "Electronic Codebook (ECB)",
+        "Cipher Block Chaining (CBC)",
+        "Cipher Feedback (CFB)",
+        "Output Feedback (OFB)",
+        "Counter (CTR) Mode"
+      ],
+      "inLanguage": "en-US",
+      "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    }
+    </script>
+
+    <!-- External Resources -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -374,6 +490,12 @@
             transition: background 0.3s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             margin-left: 10px;
+            border: 2px solid transparent;
+            outline: none;
+        }
+        .toggle-switch:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 172, 193, 0.3);
         }
         .toggle-slider {
             position: absolute;
@@ -415,6 +537,19 @@
         .toggle-switch.dark .toggle-slider {
             left: 31px;
             background: var(--blue3);
+        }
+
+        /* Screen reader only text */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         .download-section-btn {
             background: var(--blue2);
@@ -771,10 +906,11 @@
     <div class="container">
         <div class="header">
             <div class="theme-toggle">
-                <div class="toggle-switch" id="themeSwitch">
+                <label for="themeSwitch" class="sr-only">Toggle theme</label>
+                <div class="toggle-switch" id="themeSwitch" role="switch" aria-checked="false" aria-label="Toggle between light and dark theme" tabindex="0">
                     <div class="toggle-slider">
-                        <span class="icon-sun"><i class="fas fa-sun"></i></span>
-                        <span class="icon-moon"><i class="fas fa-moon"></i></span>
+                        <span class="icon-sun" aria-hidden="true"><i class="fas fa-sun"></i></span>
+                        <span class="icon-moon" aria-hidden="true"><i class="fas fa-moon"></i></span>
                     </div>
                 </div>
             </div>
@@ -1241,7 +1377,8 @@
 
     <footer>
         <div class="footer-content">
-            <p>Data Security Learning Module - Block Cipher Operation Modes | Designed for Educational Purposes | By Eng. Eslam Osama</p>
+            <p>Developed by <span class="brand">EOPeak</span> | <span class="developer">Eslam Osama Saad</span></p>
+            <p>© 2025 ECE4304 Data Security | AASTMT Computer Engineering</p>
             <div class="copyright-notice">
                 <button class="copyright-btn" onclick="showCopyrightNotice()">
                     <i class="fas fa-copyright"></i> Copyright Notice
@@ -1266,42 +1403,210 @@
 
 
     <script>
+        // --- GLOBAL ERROR HANDLING ---
+        // Suppress noisy console errors for production
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+
+        console.error = function(...args) {
+            // Filter out browser extension and third-party errors
+            const message = args.join(' ');
+            if (message.includes('chrome-extension://') ||
+                message.includes('moz-extension://') ||
+                message.includes('safari-extension://') ||
+                message.includes('Extension context invalidated') ||
+                message.includes('chrome://') ||
+                message.includes('moz://') ||
+                message.includes('safari://')) {
+                return; // Suppress these errors
+            }
+            originalConsoleError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            // Filter out common third-party warnings
+            const message = args.join(' ');
+            if (message.includes('Download the React DevTools') ||
+                message.includes('chrome-extension://') ||
+                message.includes('moz-extension://') ||
+                message.includes('safari-extension://')) {
+                return; // Suppress these warnings
+            }
+            originalConsoleWarn.apply(console, args);
+        };
+
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            // Filter out browser extension errors and common third-party errors
+            if (event.filename &&
+                (event.filename.startsWith('chrome-extension://') ||
+                 event.filename.startsWith('moz-extension://') ||
+                 event.filename.startsWith('safari-extension://') ||
+                 event.filename.includes('googletagmanager.com') ||
+                 event.filename.includes('google-analytics.com'))) {
+                event.preventDefault();
+                return false;
+            }
+
+            // Log other errors for debugging (in development only)
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.error('Global error:', event.error, event.filename, event.lineno);
+            }
+        });
+
+        // Unhandled promise rejection handler
+        window.addEventListener('unhandledrejection', function(event) {
+            if (event.reason && typeof event.reason === 'string' &&
+                (event.reason.includes('chrome-extension://') ||
+                 event.reason.includes('moz-extension://') ||
+                 event.reason.includes('safari-extension://'))) {
+                event.preventDefault();
+                return false;
+            }
+
+            // Log unhandled rejections (in development only)
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.error('Unhandled promise rejection:', event.reason);
+            }
+        });
+
+        // Performance monitoring (with browser compatibility check)
+        if ('performance' in window && 'PerformanceObserver' in window) {
+            try {
+                // Check if longtask is supported before using it
+                if (PerformanceObserver.supportedEntryTypes &&
+                    PerformanceObserver.supportedEntryTypes.includes('longtask')) {
+                    // Monitor long tasks
+                    const observer = new PerformanceObserver((list) => {
+                        for (const entry of list.getEntries()) {
+                            if (entry.duration > 50) { // Tasks longer than 50ms
+                                console.warn('Long task detected:', entry);
+                            }
+                        }
+                    });
+                    observer.observe({ entryTypes: ['longtask'] });
+                }
+            } catch (e) {
+                // Silently fail if not supported
+            }
+        }
+
+        // --- PWA REGISTRATION ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Check if service worker is already registered
+                navigator.serviceWorker.getRegistration()
+                    .then(function(existingRegistration) {
+                        if (existingRegistration) {
+                            console.log('[SW] Service worker already registered:', existingRegistration.scope);
+                            return existingRegistration;
+                        } else {
+                            return navigator.serviceWorker.register('sw.js');
+                        }
+                    })
+                    .then(function(registration) {
+                        if (registration) {
+                            console.log('[SW] Registered successfully:', registration.scope);
+
+                            // Handle updates
+                            registration.addEventListener('updatefound', function() {
+                                const newWorker = registration.installing;
+                                if (newWorker) {
+                                    newWorker.addEventListener('statechange', function() {
+                                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                            // New version available
+                                            showUpdateNotification();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    })
+                    .catch(function(error) {
+                        console.warn('[SW] Registration failed:', error.message);
+                        // Don't show error to user, just log it
+                    });
+            });
+        }
+
         // --- THEME TOGGLE ---
         const themeSwitch = document.getElementById('themeSwitch');
         const root = document.documentElement;
-        function setTheme(mode) {
-            if (mode === 'dark') {
-                root.setAttribute('data-theme', 'dark');
-                themeSwitch.classList.add('dark');
-            } else {
-                root.removeAttribute('data-theme');
-                themeSwitch.classList.remove('dark');
-            }
-            localStorage.setItem('theme', mode);
+
+        // Ensure theme switch element exists before adding event listeners
+        if (!themeSwitch) {
+            console.warn('[Theme] Theme switch element not found');
         }
-        themeSwitch.addEventListener('click', () => {
-            const isDark = root.getAttribute('data-theme') === 'dark';
-            setTheme(isDark ? 'light' : 'dark');
-        });
+        function setTheme(mode) {
+            try {
+                if (mode === 'dark') {
+                    root.setAttribute('data-theme', 'dark');
+                    themeSwitch.classList.add('dark');
+                    themeSwitch.setAttribute('aria-checked', 'true');
+                } else {
+                    root.removeAttribute('data-theme');
+                    themeSwitch.classList.remove('dark');
+                    themeSwitch.setAttribute('aria-checked', 'false');
+                }
+                localStorage.setItem('theme', mode);
+            } catch (error) {
+                console.warn('Theme storage failed:', error);
+            }
+        }
+        if (themeSwitch) {
+            themeSwitch.addEventListener('click', () => {
+                const isDark = root.getAttribute('data-theme') === 'dark';
+                setTheme(isDark ? 'light' : 'dark');
+            });
+            themeSwitch.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    const isDark = root.getAttribute('data-theme') === 'dark';
+                    setTheme(isDark ? 'light' : 'dark');
+                }
+            });
+        }
+
         // Set initial theme on load
         (() => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                setTheme('dark');
+            try {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    setTheme(savedTheme);
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme('dark');
+                } else {
+                    // Set default light theme with proper aria attributes
+                    if (themeSwitch) {
+                        themeSwitch.setAttribute('aria-checked', 'false');
+                    }
+                }
+            } catch (error) {
+                console.warn('Theme initialization failed:', error);
+                // Set default state on error
+                if (themeSwitch) {
+                    themeSwitch.setAttribute('aria-checked', 'false');
+                }
             }
         })();
 
-        // --- Progress Bar --- 
+        // --- Progress Bar ---
         const sections = document.querySelectorAll('.section');
         const progressBar = document.getElementById('progressBar');
         const navButtons = document.querySelectorAll('.nav-btn');
         const navDropdown = document.getElementById('navDropdown');
 
+        // Validate critical DOM elements exist
+        if (!progressBar) {
+            console.warn('[Progress] Progress bar element not found');
+        }
+        if (!navDropdown) {
+            console.warn('[Navigation] Nav dropdown element not found');
+        }
+
         function updateProgressBar() {
             const activeSection = document.querySelector('.section.active');
-            if (!activeSection) return;
+            if (!activeSection || !progressBar) return;
 
             const sectionIndex = Array.from(sections).indexOf(activeSection);
             const progress = (sectionIndex / (sections.length - 1)) * 100;
@@ -1329,16 +1634,28 @@
         }
 
         navButtons.forEach(btn => {
-            btn.addEventListener('click', () => showSection(btn.dataset.section));
+            if (btn && btn.dataset && btn.dataset.section) {
+                btn.addEventListener('click', () => showSection(btn.dataset.section));
+            }
         });
-        
-        navDropdown.addEventListener('change', () => showSection(navDropdown.value));
+
+        if (navDropdown) {
+            navDropdown.addEventListener('change', () => showSection(navDropdown.value));
+        }
 
         // --- Accordion/Question Toggle ---
         const quizSection = document.getElementById('quiz');
         const questions = quizSection ? quizSection.querySelectorAll('.question-card details') : [];
         const toggleAllBtn = document.getElementById('toggleAllAnswersBtn');
         const toggleAllBtnText = document.getElementById('toggleAllAnswersText');
+
+        // Validate quiz elements exist
+        if (!toggleAllBtn) {
+            console.warn('[Quiz] Toggle all answers button not found');
+        }
+        if (!toggleAllBtnText) {
+            console.warn('[Quiz] Toggle all answers text element not found');
+        }
 
         if (toggleAllBtn) {
             toggleAllBtn.addEventListener('click', () => {
@@ -1361,21 +1678,32 @@
         // --- LOADING SCREEN ---
         const loadingScreen = document.getElementById('loadingScreen');
         function showLoading(message = 'Processing...') {
-            loadingScreen.querySelector('.loading-text').textContent = message;
-            loadingScreen.classList.add('show');
+            if (loadingScreen) {
+                const loadingText = loadingScreen.querySelector('.loading-text');
+                if (loadingText) {
+                    loadingText.textContent = message;
+                }
+                loadingScreen.classList.add('show');
+            }
         }
         function hideLoading() {
-            loadingScreen.classList.remove('show');
+            if (loadingScreen) {
+                loadingScreen.classList.remove('show');
+            }
         }
 
         // --- FOOTER NOTIFICATION ---
         const copyrightNotification = document.getElementById('copyrightNotification');
         function showCopyrightNotice() {
-            copyrightNotification.classList.add('show');
-            setTimeout(hideCopyrightNotice, 5000);
+            if (copyrightNotification) {
+                copyrightNotification.classList.add('show');
+                setTimeout(hideCopyrightNotice, 5000);
+            }
         }
         function hideCopyrightNotice() {
-            copyrightNotification.classList.remove('show');
+            if (copyrightNotification) {
+                copyrightNotification.classList.remove('show');
+            }
         }
         // Auto show notice on first load
         document.addEventListener('DOMContentLoaded', () => {
@@ -1549,9 +1877,70 @@
             }
         }
 
+        // --- PWA NOTIFICATIONS ---
+        function showUpdateNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'notification show';
+            notification.innerHTML = `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <i class="fas fa-sync-alt"></i> Update Available
+                    </div>
+                    <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="notification-content">
+                    <p>A new version is available. Refresh to update!</p>
+                    <button onclick="window.location.reload()" style="margin-top: 10px; padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Refresh Now
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+        }
+
+        // --- LOGO ERROR HANDLING ---
+        function handleLogoError(img) {
+            console.warn('Logo failed to load, applying fallback');
+            img.style.display = 'none';
+
+            // Try to show a text fallback
+            const fallback = document.createElement('span');
+            fallback.textContent = '🔒';
+            fallback.style.fontSize = '2rem';
+            img.parentElement.appendChild(fallback);
+        }
+
+        // Check logo loading on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const logos = document.querySelectorAll('img[alt*="logo"], img[alt*="Logo"]');
+            logos.forEach(img => {
+                img.addEventListener('error', () => handleLogoError(img));
+                // Check if already loaded
+                if (img.complete && img.naturalHeight === 0) {
+                    handleLogoError(img);
+                }
+            });
+        });
+
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            showSection('intro'); // Set initial section to Introduction
+            // Ensure all required libraries are loaded before initializing
+            const requiredLibs = [
+                typeof JSZip !== 'undefined',
+                typeof saveAs !== 'undefined',
+                typeof html2canvas !== 'undefined'
+            ];
+
+            if (requiredLibs.every(lib => lib)) {
+                console.log('[Init] All required libraries loaded successfully');
+                showSection('intro'); // Set initial section to Introduction
+            } else {
+                console.warn('[Init] Some required libraries failed to load');
+                // Still try to show the intro section
+                showSection('intro');
+            }
         });
     </script>
 </body>
