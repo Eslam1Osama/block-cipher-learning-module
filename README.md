@@ -242,7 +242,7 @@ The application includes built-in optimizations:
 ## 🤝 Professional Services
 
 ### 🏢 **About EOPeak**
-[EOPeak](https://eslam-portfolio-phi.vercel.app/) specializes in enterprise-grade web development solutions, delivering high-quality, scalable applications for corporate clients worldwide.
+[EOPeak](https://eslam-portfolio-phi.vercel.app/) specializes in turning complex academic materials and dense corporate reports into sleek, intuitive, and interactive digital experiences. I design and build modern platforms that make learning and knowledge-sharing seamless, engaging, and impactful — leveraging cutting-edge educational technology to empower every audience.
 
 ### 👨‍💻 **Lead Developer**
 **Eng. Eslam Osama Saad**
